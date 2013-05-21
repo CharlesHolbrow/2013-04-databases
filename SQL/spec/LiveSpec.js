@@ -9,15 +9,14 @@ describe("Persistent Node Chat Server", function() {
 
   beforeEach(function() {
     dbConnection = mysql.createConnection({
-    /* TODO: Fill this out with your mysql username */
-      user: "",
-    /* and password. */
+
+      user: "root",
       password: "",
       database: "chat"
     });
     dbConnection.connect();
 
-    var tablename = ""; // TODO: fill this out
+    var tablename = "messages";
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
@@ -31,7 +30,7 @@ describe("Persistent Node Chat Server", function() {
   it("Should insert posted messages to the DB", function(done) {
     // Post a message to the node chat server:
     request({method: "POST",
-             uri: "http://127.0.0.1:8080/classes/room1",
+             url: "http://127.0.0.1:8080/classes/room1",
              form: {username: "Valjean",
                     message: "In mercy's name, three days is all I need."}
             },
@@ -39,8 +38,8 @@ describe("Persistent Node Chat Server", function() {
               /* Now if we look in the database, we should find the
                * posted message there. */
 
-              var queryString = "";
-              var queryArgs = [];
+              var queryString = "INSERT INTO messages (message, username) VALUES (?,?);";
+              var queryArgs = ['Valjean',"In mercy's name, three days is all I need."];
               /* TODO: Change the above queryString & queryArgs to match your schema design
                * The exact query string and query args to use
                * here depend on the schema you design, so I'll leave
@@ -48,6 +47,9 @@ describe("Persistent Node Chat Server", function() {
               dbConnection.query( queryString, queryArgs,
                 function(err, results, fields) {
                   // Should have one result:
+                  console.log('error:', err);
+                  console.log('results:', results);
+                  console.log('fields:', fields);
                   expect(results.length).toEqual(1);
                   expect(results[0].username).toEqual("Valjean");
                   expect(results[0].message).toEqual("In mercy's name, three days is all I need.");
