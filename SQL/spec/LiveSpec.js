@@ -4,7 +4,7 @@ var request = require("request");
 describe("Persistent Node Chat Server", function() {
   var dbConnection;
 
-  beforeEach(function() {
+  beforeEach(function(done) {
     dbConnection = mysql.createConnection({
 
       user: "root",
@@ -17,7 +17,9 @@ describe("Persistent Node Chat Server", function() {
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
-    dbConnection.query("DELETE FROM " + tablename);
+    dbConnection.query("DELETE FROM " + tablename, function(err) {
+      done();
+    });
   });
 
   afterEach(function() {
