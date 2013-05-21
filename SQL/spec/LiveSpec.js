@@ -26,7 +26,7 @@ describe("Persistent Node Chat Server", function() {
     dbConnection.end();
   });
 
-  xit("Should insert posted messages to the DB", function(done) {
+  it("Should insert posted messages to the DB", function(done) {
     // Post a message to the node chat server:
     request({method: "POST",
              url: "http://127.0.0.1:8060/classes/room1",
